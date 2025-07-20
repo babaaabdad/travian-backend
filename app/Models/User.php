@@ -9,7 +9,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -34,6 +34,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @property-read int|null $notifications_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
+ * @property-read \App\Models\Village|null $village
  * @method static UserFactory factory(...$parameters)
  * @method static Builder|User findByUuid(string $uuid)
  * @method static Builder|User findOrFailByUuid(string $uuid)
@@ -50,8 +51,6 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
  * @method static Builder|User whereUuid($value)
- * @property-read Collection|Post[] $posts
- * @property-read int|null $posts_count
  */
 final class User extends Authenticatable
 {
@@ -91,10 +90,12 @@ final class User extends Authenticatable
     ];
 
     /**
-     * @return HasMany<Post>
+     * Define the one-to-one relationship with Village.
+     * A User "has one" Village.
+     * This defines the relationship from the parent (user) to the child (village).
      */
-    public function posts(): HasMany
+    public function village(): HasOne
     {
-        return $this->hasMany(Post::class);
+        return $this->hasOne(Village::class);
     }
 }
